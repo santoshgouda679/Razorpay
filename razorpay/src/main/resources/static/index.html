@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Razorpay Demo</title>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+</head>
+
+<body>
+
+<h2>Razorpay Payment</h2>
+
+<input type="number" id="amount">
+
+<button onclick="payNow()">Pay Now</button>
+
+<script>
+
+function payNow(){
+
+let amount=document.getElementById("amount").value;
+
+fetch("http://localhost:8082/payments",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+amount:amount
+})
+
+})
+
+.then(res=>res.json())
+
+.then(data=>{
+
+var options={
+
+key:"rzp_test_TFgB0EFkLobsHx",
+
+amount:data.amount,
+
+currency:data.currency,
+
+order_id:data.id,
+
+name:"Spring Boot",
+
+description:"Payment Demo",
+
+handler:function(response){
+
+alert("Payment Successful");
+
+console.log(response);
+
+}
+
+};
+
+var rzp=new Razorpay(options);
+
+rzp.open();
+
+})
+
+.catch(err=>{
+
+console.log(err);
+
+alert("Payment Failed");
+
+});
+
+}
+
+</script>
+
+</body>
+
+</html>
